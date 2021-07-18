@@ -4,6 +4,7 @@ import { Subject, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { User } from './user.model';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment.prod';
 
 export interface authResponseData {
     kind: string;
@@ -25,10 +26,22 @@ export class AuthService {
         const expirationDate = new Date(new Date().getTime() + +expiresIn * 1000);
         const user = new User(email, localId, idToken, expirationDate);
         this.user.next(user);
+        localStorage.setItem('userData', JSON.stringify(user)) // to maintain data even if u do refresh after login
+    }
+
+    autoLogin(){
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        if (!userData) {
+            return;
+        }
+        const loadedUser = new User(userData.email, userData.id, userData._token, new Date(userData._tokenExpirationDate));
+        if (loadedUser.token) { // it will true only if user has a token and that it its expiry date is greater than current date
+            this.user.next(loadedUser);
+        }
     }
 
     signup (email: string, password: string) {
-        return this.http.post<authResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDPvibywdnVxWAkrMlDz7pWuvk39t7iCIk', {
+        return this.http.post<authResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+environment.firebaseKey, {
             email: email,
             password: password,
             returnSecureToken: true
@@ -39,7 +52,7 @@ export class AuthService {
     }
 
     login (email: string, password: string) {
-        return this.http.post<authResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDPvibywdnVxWAkrMlDz7pWuvk39t7iCIk', {
+        return this.http.post<authResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+environment.firebaseKey, {
             email: email,
             password: password,
             returnSecureToken: true
