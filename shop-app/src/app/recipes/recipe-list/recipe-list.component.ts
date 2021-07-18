@@ -18,6 +18,9 @@ export class RecipeListComponent implements OnInit {
 
   ngOnInit(): void {
     this.recipes = this.recipeService.getRecipes();
+    this.recipeService.recipeChanged.subscribe(recipes => {
+      this.recipes = recipes;
+    })
     const customObservable = Observable.create(observer => {
       let c = 0;
       setInterval(()=>{

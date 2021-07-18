@@ -12,14 +12,14 @@ export class RecipeService {
     constructor(private slService:ShoppingListService) {}
 
     private recipes: Recipe[] = [
-        new Recipe("1", 'Veg Burger', 'Freshly prepared', 'http://localhost:4200/assets/Recipe.png', [
-          new Ingredient('Veggie', 1),
-          new Ingredient('French Fries', 1)
-        ]),
-        new Recipe("2", 'A Test Recipe', 'This is a simpl test', 'http://localhost:4200/assets/Recipe.png', [
-          new Ingredient('Meat', 1),
-          new Ingredient('  Bread', 1)
-        ])
+        // new Recipe("1", 'Veg Burger', 'Freshly prepared', 'http://localhost:4200/assets/Recipe.png', [
+        //   new Ingredient('Veggie', 1),
+        //   new Ingredient('French Fries', 1)
+        // ]),
+        // new Recipe("2", 'A Test Recipe', 'This is a simpl test', 'http://localhost:4200/assets/Recipe.png', [
+        //   new Ingredient('Meat', 1),
+        //   new Ingredient('  Bread', 1)
+        // ])
       ];
 
     getRecipes(): Recipe[] {
