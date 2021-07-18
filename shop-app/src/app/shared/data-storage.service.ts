@@ -20,20 +20,9 @@ export class DataStorageService{
     }
 
     getRecipes() {
-
-        // now pipe both the observerables into 1 big observable - exhaustMap which waits for data from
-        // previousobservable and then in the observable chain new observable will be added
-        return this.authService.user.pipe(
-            take(1),
-            exhaustMap(user => {
-                return this.http.get<Recipe[]>(
-                    'https://shop-app-66008-default-rtdb.firebaseio.com/recipes.json',
-                    {
-                        params: new HttpParams().set('auth', user.token )
-                    }
-                );
-            }), // we are telling take that get 1 user and thats it !
-        
+        return this.http.get<Recipe[]>(
+            'https://shop-app-66008-default-rtdb.firebaseio.com/recipes.json'
+        ).pipe(
             map(recipes => {
                 return recipes.map(recipe => {
                     return {...recipe, Ingredients: recipe.ingredients ? recipe.ingredients : []};

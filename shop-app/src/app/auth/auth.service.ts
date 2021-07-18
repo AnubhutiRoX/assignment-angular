@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { User } from './user.model';
+import { Router } from '@angular/router';
 
 export interface authResponseData {
     kind: string;
@@ -17,7 +18,7 @@ export interface authResponseData {
 export class AuthService {
     user = new BehaviorSubject<User>(null); // get access to the previously emitted value
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private router: Router) {}
 
     handleAuthentication(email: string, localId: string, idToken: string, expiresIn: string) {
         console.log('handleAuth');
@@ -46,5 +47,10 @@ export class AuthService {
         .pipe(tap(res=> {
             this.handleAuthentication(res.email, res.localId, res.idToken, res.expiresIn);
         }));
+    }
+
+    logout() {
+        this.user.next(null);
+        this.router.navigate(['/auth']);
     }
 }
